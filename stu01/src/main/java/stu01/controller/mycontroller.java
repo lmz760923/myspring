@@ -41,7 +41,7 @@ public class mycontroller {
 		
 	}
 	
-	@RequestMapping("/login")
+	@PostMapping("/login")
 	
 	public ResponseEntity<User>login(User u,HttpServletRequest request,HttpServletResponse response ){
 		

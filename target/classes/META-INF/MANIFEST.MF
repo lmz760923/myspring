@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Built-By: mz.li
+Build-Jdk: 22.0.2
+Implementation-Title: stu01
+Implementation-Version: 1
+Implementation-Vendor-Id: students
+Implementation-URL: https://projects.spring.io/spring-boot/#/spring-boot
+ -starter-parent/stu01
+Created-By: Maven Integration for Eclipse
+

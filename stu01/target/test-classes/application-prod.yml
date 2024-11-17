@@ -9,7 +9,7 @@ spring:
        suffix: .html
        mode: LEGACYHTML5
     datasource:
-       driver-Class-Name: com.mysql.cj.jdbc.Driver
+       driver-Class-Name: com.mysql.jdbc.Driver
        url: jdbc:mysql://127.0.0.1:3306/mydata?useSSL=false&serverTimezone=UTC&characterEncoding=utf-8&allowPublicKeyRetrieval=true
        username: root
        password: lmz760923

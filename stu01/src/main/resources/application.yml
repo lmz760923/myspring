@@ -12,7 +12,7 @@ spring:
        driver-Class-Name: com.mysql.cj.jdbc.Driver
        url: jdbc:mysql://127.0.0.1:3306/mydata?useSSL=false&serverTimezone=UTC&characterEncoding=utf-8
        username: root
-       password: lmz760923
+       password: 760923X
 
 logging:
      config: classpath:logback.xml

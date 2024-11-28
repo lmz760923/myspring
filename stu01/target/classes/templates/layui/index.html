@@ -113,8 +113,9 @@ layui.use(['element','jquery'], function(){
 				$.ajax({
 					type:"POST",
 					url:"/users/insert",
-					data:{id:"1008",name:"xxx",password:"100",number:"100"},
+					data:JSON.stringify({id:"1008",name:"xxx",password:"100",number:"100"}),
 					dataType:"json",
+					contentType: "application/json",
 					success:function(data){alert('success');console.log(data);},
 					error: function(xhr,status,error){alert(error);},
 					complete:function(){alert('complete');}

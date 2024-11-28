@@ -22,7 +22,7 @@ public class Config {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setUrl(url);
         dataSource.setUsername(username);
-        dataSource.setPassword(password);
+        dataSource.setPassword(password.substring(0, 6));
         dataSource.setDriverClassName(dcn);
         return dataSource;
     }

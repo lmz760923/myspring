@@ -9,7 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,12 +30,13 @@ public class mycontroller {
 	private	UserDaoImpl userdao;
 	@PostMapping("/insert")
 	
-	public ResponseEntity<User> insert(User u) {
+	public ResponseEntity<User> insert(@RequestBody User u) {
 		System.out.println("u.getName:"+u.getName());
 		System.out.println("property driver name:"+name);
 		userdao.insert(u);
 		return ResponseEntity.status(HttpStatus.OK).body(u);
 	}
+	@GetMapping("/select")
 	@PostMapping("/select")
 	public ResponseEntity<List<User>>select(){
 		List<User> li_u;
@@ -55,6 +59,14 @@ public class mycontroller {
 		return ResponseEntity.status(HttpStatus.OK).body(ur);
 
 		
+		
+	}
+	
+	@GetMapping("/select/{id}")
+	public ResponseEntity<User>getById(@PathVariable("id") Integer userid,HttpServletRequest request,HttpServletResponse response){
+		User ur=this.userdao.getById(userid);
+		
+		return ResponseEntity.status(HttpStatus.OK).body(ur);
 		
 	}
 

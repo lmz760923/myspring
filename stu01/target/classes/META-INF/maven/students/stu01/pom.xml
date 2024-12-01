@@ -33,6 +33,20 @@
   		<groupId>org.springframework.boot</groupId>
   		<artifactId>spring-boot-starter-thymeleaf</artifactId>
   	</dependency>
+
+  	<!-- 引入Spring Boot Web Services Starter -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web-services</artifactId>
+        </dependency>
+ 
+        <!-- 引入Apache CXF Spring Boot Starter for JAX-WS -->
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-spring-boot-starter-jaxws</artifactId>
+            <version>3.3.4</version>
+        </dependency>
+
   	
   </dependencies>
       	

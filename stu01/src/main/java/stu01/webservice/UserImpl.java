@@ -1,5 +1,6 @@
 package stu01.webservice;
 
+import javax.jws.WebParam;
 import javax.jws.WebService;
 
 import org.springframework.stereotype.Component;
@@ -11,7 +12,7 @@ import stu01.model.User;
 public class UserImpl implements UserService {
 
 	@Override
-	public User getUserByName(String userName) {
+	public User getUserByName(@WebParam(name = "userName")String userName) {
 		System.out.println("input parameter:"+userName);
 		User user=new User();
 		user.setId(1001);

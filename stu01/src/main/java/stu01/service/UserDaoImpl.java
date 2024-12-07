@@ -1,27 +1,69 @@
 package stu01.service;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import stu01.model.User;
-@Service
+@Repository("userDao")
 public class UserDaoImpl {
-	@Autowired
-	private JdbcTemplate jdbcTemplate;
-	public int insert(User user) {
-		System.out.println("jdbcTemplate:"+this.jdbcTemplate);
-		String insertsql="insert into user(id,name,password,number) values(?,?,?,?)";
-		return jdbcTemplate.update(insertsql,user.getId(),user.getName(),user.getPassword(),user.getNumber());
+	@Resource(name="datasource")
+	private DriverManagerDataSource ds;
 	
+	
+	public int insert(User user) throws SQLException {
+		int rows;
+		Connection jdbc_conn;
+		jdbc_conn=ds.getConnection();
+    	jdbc_conn.setAutoCommit(false);
+		CallableStatement cst=jdbc_conn.prepareCall("insert into user(id,name,password,number) values(?,?,?,?)");
+		cst.setLong(1, 1009);
+		cst.setString(2, user.getName());
+		cst.setString(3, user.getPassword());
+		cst.setLong(4, user.getNumber());
+		rows=cst.executeUpdate();
+	
+		jdbc_conn.commit();
+		jdbc_conn.close();
+		return rows;
 		
 	}
-	public List<User>select(){
+	public List<User>select() throws SQLException {
+		Connection jdbc_conn;
+		jdbc_conn=ds.getConnection();
 		String selectsql="select id,name,password,number from user";
-		return jdbcTemplate.query(selectsql,new BeanPropertyRowMapper<User>(User.class));
+		Statement st;
+		ResultSet rs;
+		List<User> lst=new ArrayList<>();
+		try {
+		st=jdbc_conn.createStatement();
+		rs=st.executeQuery(selectsql);
+		while (rs.next())
+		{
+			lst.add(new User(rs.getInt("id"),rs.getString("name"),rs.getString("password"),rs.getInt("number")));
+		}
+		}
+		catch(SQLException e)
+		{
+			return null;
+		}
+		return lst;
 
 	}
 	
@@ -30,12 +72,27 @@ public class UserDaoImpl {
 		
 	}
 	
-	public User getById(Integer userid) {
+	public User getById(Integer userid) throws SQLException {
+		Connection jdbc_conn;
+		jdbc_conn=ds.getConnection();
 		String selectsql="select * from user where id=?";
-		List<Map<String, Object>> list=jdbcTemplate.queryForList(selectsql, userid);
-		if (list.size()>0) {
-			return new User((int)list.get(0).get("id"),(String)list.get(0).get("name"),(String)list.get(0).get("password"),(int)list.get(0).get("number"));
+		PreparedStatement pst;
+		ResultSet rst;
+		try {
+			pst=jdbc_conn.prepareStatement(selectsql);
+			pst.setInt(1, userid);
+			rst=pst.executeQuery();
+		
+		if (rst.getRow()>0) {
+			jdbc_conn.close();
+			return new User((int)rst.getInt("id"),(String)rst.getString("name"),(String)rst.getString("password"),(int)rst.getInt("number"));
 		}
+		
+		} catch (SQLException e) {
+			
+			return null;
+		}
+		
 		return null;
 		
 	}

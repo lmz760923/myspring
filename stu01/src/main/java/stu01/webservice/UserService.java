@@ -4,5 +4,5 @@ import javax.jws.WebService;
 import javax.jws.WebParam;
 @WebService
 public interface UserService {
-		User getUserByName(@WebParam(name = "userName")String userName);
+	public	User getUserByName(@WebParam(name = "userName")String userName);
 }

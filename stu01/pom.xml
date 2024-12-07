@@ -46,7 +46,7 @@
             <artifactId>cxf-spring-boot-starter-jaxws</artifactId>
             <version>3.3.4</version>
         </dependency>
-
+        
   	
   </dependencies>
       	

@@ -18,10 +18,10 @@ public class WebServiceConfig {
 	SpringBus springBus() {
 		return new SpringBus();
 	}
-	@SuppressWarnings("rawtypes")
+
 	@Bean(name="wbsBean")
-	ServletRegistrationBean dispatcherServlet() {
-	ServletRegistrationBean wbsServlet=new ServletRegistrationBean(new CXFServlet(),"/wbs/*");
+	ServletRegistrationBean<CXFServlet> dispatcherServlet() {
+	ServletRegistrationBean<CXFServlet> wbsServlet=new ServletRegistrationBean<CXFServlet>(new CXFServlet(),"/wbs/*");
 	return wbsServlet;
 	}
 

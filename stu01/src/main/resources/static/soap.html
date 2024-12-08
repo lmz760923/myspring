@@ -37,12 +37,13 @@ function addListeners(){
 	document.getElementById("idsoap").addEventListener('click',soap);
 }
 
+window.addEventListener('load',(event)=>addListeners(event));
 </script>
 <style type="text/css">
 
 </style>
 </head>
-<body onload='addListeners()'>
+<body>
 <div>
 <button type="button" id="idsoap">soap</button>
 </div>

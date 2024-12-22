@@ -17,7 +17,6 @@ public class UserImpl implements UserService {
 		User user=new User();
 		user.setId(1001);
 		user.setName(userName);
-		user.setNumber(10000);
 		user.setPassword("xyz");
 		return user;
 	}

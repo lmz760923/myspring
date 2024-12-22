@@ -18,9 +18,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import stu01.model.User;
 import stu01.service.UserDaoImpl;
-
 @RestController
 @RequestMapping("/users")
 public class mycontroller {

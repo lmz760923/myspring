@@ -1,60 +1,39 @@
 package stu01.service;
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Resource;
 
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.stereotype.Repository;
+import stu01.model.Content;
+import stu01.model.CategoryList;
+import stu01.model.ContentList;
+import stu01.model.ProductList;
+import stu01.model.Product;
+import stu01.model.Category;
 import stu01.model.User;
+import stu01.model.carousel;
+import stu01.model.cera;
+import stu01.model.ctotalRow;
+import stu01.model.userlist;
+import stu01.model.carousellist;
 @Repository("userDao")
 public class UserDaoImpl {
 	@Resource(name="datasource")
 	private DriverManagerDataSource ds;
-	
+	@Resource(name="jdbcTemplate")
+	private JdbcTemplate jdbc;
 	
 	public int insert(User user) throws SQLException {
-		int rows;
-		Connection jdbc_conn;
-		jdbc_conn=ds.getConnection();
-    	jdbc_conn.setAutoCommit(false);
-		CallableStatement cst=jdbc_conn.prepareCall("insert into user(id,name,password,number) values(?,?,?,?)");
-		cst.setLong(1, 1009);
-		cst.setString(2, user.getName());
-		cst.setString(3, user.getPassword());
-		cst.setLong(4, user.getNumber());
-		rows=cst.executeUpdate();
-	
-		jdbc_conn.commit();
-		jdbc_conn.close();
-		return rows;
+		return jdbc.update("insert into users(name,password,email,created_at,updated_at) values(?,?,?,datetime('now','localtime'),datetime('now','localtime'))",user.getName(),user.getPassword(),user.getEmail());
 		
 	}
 	public List<User>select() throws SQLException {
-		Connection jdbc_conn;
-		jdbc_conn=ds.getConnection();
-		String selectsql="select id,name,password,number from user";
-		Statement st;
-		ResultSet rs;
-		List<User> lst=new ArrayList<>();
-		try {
-		st=jdbc_conn.createStatement();
-		rs=st.executeQuery(selectsql);
-		while (rs.next())
-		{
-			lst.add(new User(rs.getInt("id"),rs.getString("name"),rs.getString("password"),rs.getInt("number")));
-		}
-		}
-		catch(SQLException e)
-		{
-			return null;
-		}
-		return lst;
+		
+      return jdbc.query("select * from users", new BeanPropertyRowMapper<User>(User.class));
+       
 
 	}
 	
@@ -64,27 +43,125 @@ public class UserDaoImpl {
 	}
 	
 	public User getById(Integer userid) throws SQLException {
-		Connection jdbc_conn;
-		jdbc_conn=ds.getConnection();
-		String selectsql="select * from user where id=?";
-		PreparedStatement pst;
-		ResultSet rst;
-		try {
-			pst=jdbc_conn.prepareStatement(selectsql);
-			pst.setInt(1, userid);
-			rst=pst.executeQuery();
 		
-		if (rst.getRow()>0) {
-			jdbc_conn.close();
-			return new User((int)rst.getInt("id"),(String)rst.getString("name"),(String)rst.getString("password"),(int)rst.getInt("number"));
-		}
+		return jdbc.queryForObject("select * from users where id=?",new Object[] {userid},new BeanPropertyRowMapper<User>(User.class));
 		
-		} catch (SQLException e) {
-			
-			return null;
-		}
+	}
+	
+	public boolean auth(String user,String password) {
+		Integer count=jdbc.queryForObject("select count(*) from users where name=? and password=?", new Object[] {user,password},Integer.class);
+		return (count.intValue()==1);
 		
-		return null;
+	}
+	
+	public userlist userlist() throws SQLException {
+		userlist li=new userlist();
+		
+		li.setCode(0);
+		li.setTotalRow(new ctotalRow(0, new cera(10, 1, 1)));
+		li.setMsg("success");
+		li.setData(this.select());
+		
+		return li;
+		
+	}
+	
+	public carousellist carousellist(int page,int limit) throws SQLException {
+		carousellist li=new carousellist();
+		
+		li.setCode(0);
+		li.setTotalRow(new ctotalRow(0, new cera(10, 1, 1)));
+		li.setMsg("success");
+		li.setData(jdbc.query("select * from carousel limit ?,?", new Object[] {(page-1)*limit, limit},new BeanPropertyRowMapper<carousel>(carousel.class)));
+		
+		return li;
+		
+	}
+	
+	public CategoryList categorylist(int page,int limit) throws SQLException {
+		CategoryList li=new CategoryList();
+		
+		li.setCode(0);
+		li.setTotalRow(new ctotalRow(0, new cera(10, 1, 1)));
+		li.setMsg("success");
+		li.setData(jdbc.query("select * from categories limit ?,?", new Object[] {(page-1)*limit, limit},new BeanPropertyRowMapper<Category>(Category.class)));
+		
+		return li;
+		
+	}
+	
+	public ProductList productlist(int page,int limit) throws SQLException {
+		ProductList li=new ProductList();
+		
+		li.setCode(0);
+		li.setTotalRow(new ctotalRow(0, new cera(10, 1, 1)));
+		li.setMsg("success");
+		li.setData(jdbc.query("select * from products limit ?,?", new Object[] {(page-1)*limit, limit},new BeanPropertyRowMapper<Product>(Product.class)));
+		
+		return li;
+		
+	}
+	public ContentList contentlist(int page,int limit) throws SQLException {
+		ContentList li=new ContentList();
+		
+		li.setCode(0);
+		li.setTotalRow(new ctotalRow(0, new cera(10, 1, 1)));
+		li.setMsg("success");
+		li.setData(jdbc.query("select * from options limit ?,?", new Object[] {(page-1)*limit, limit},new BeanPropertyRowMapper<Content>(Content.class)));
+		
+		return li;
+		
+	}
+	
+	public int adduser(User user) {
+	 	return jdbc.update("insert into users(name,password,email,created_at,updated_at) values(?,?,?,datetime('now','localtime'),datetime('now','localtime')))", user.getName(),user.getPassword(),user.getEmail());
+		
+	}
+	public int userdel(int userid) {
+		return jdbc.update("delete from users where id=?",userid);
+	}
+	public int addcarousel(String file,String href) {
+		return jdbc.update("insert into carousel(file,href,created_at,updated_at) values(?,?,datetime('now','localtime'),datetime('now','localtime'))", new Object[] {file,href});
+	}
+	public String delcarousel(Integer carid) {
+		String hrf="";
+		hrf=jdbc.queryForObject("select href from carousel where id=?", new Object[] {carid}, String.class);
+		jdbc.update("delete from carousel where id=?", new Object[] {carid});
+		return hrf;
+	}
+	public int addcategory(String category,String description,String file,String href) {
+		return jdbc.update("insert into categories(category,description,created_at,updated_at,file,href) values(?,?,datetime('now','localtime'),datetime('now','localtime'),?,?)", new Object[] {category,description,file,href});
+	}
+	public String delcategory(Integer cateid) {
+		String hrf="";
+		hrf=jdbc.queryForObject("select href from categories where id=?", new Object[] {cateid}, String.class);
+		jdbc.update("delete from categories where id=?", new Object[] {cateid});
+		return hrf;
+	}
+	public int addproduct(Integer category,String description,String file,String href,String product) {
+		return jdbc.update("insert into products(category,product,description,created_at,updated_at,file,href) values(?,?,?,datetime('now','localtime'),datetime('now','localtime'),?,?)", new Object[] {category,product,description,file,href});
+	}
+	public String delproduct(Integer id) {
+		String hrf="";
+		hrf=jdbc.queryForObject("select href from products where id=?", new Object[] {id}, String.class);
+		jdbc.update("delete from products where id=?", new Object[] {id});
+		return hrf;
+	}
+	public List<Category> getcategories() {
+		return jdbc.query("select * from categories where 1=?",new Object[] {1}, new BeanPropertyRowMapper<Category>(Category.class));
+	}
+	public int addcontent(String name,String content) {
+		return jdbc.update("insert into options(name,content,created_at,updated_at) values(?,?,datetime('now','localtime'),datetime('now','localtime'))", new Object[] {name,content});
+	}
+	public int delcontent(Integer id) {
+		
+		return jdbc.update("delete from options where id=?", new Object[] {id});
+		
+	}
+	
+    public int editcontent(Integer id,String content) {
+		
+		return jdbc.update("update options set content=? where id=?", new Object[] {content,id});
 		
 	}
 

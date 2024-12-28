@@ -78,6 +78,10 @@ public class UserDaoImpl {
 		
 	}
 	
+	public List<carousel> carousel(){
+		return jdbc.query("select * from carousel", new BeanPropertyRowMapper<carousel>(carousel.class));
+	}
+	
 	public CategoryList categorylist(int page,int limit) throws SQLException {
 		CategoryList li=new CategoryList();
 		
@@ -90,6 +94,10 @@ public class UserDaoImpl {
 		
 	}
 	
+	public List<Category> categories(){
+		return jdbc.query("select * from categories", new BeanPropertyRowMapper<Category>(Category.class));
+	}
+	
 	public ProductList productlist(int page,int limit) throws SQLException {
 		ProductList li=new ProductList();
 		
@@ -98,7 +106,17 @@ public class UserDaoImpl {
 		li.setMsg("success");
 		li.setData(jdbc.query("select * from products limit ?,?", new Object[] {(page-1)*limit, limit},new BeanPropertyRowMapper<Product>(Product.class)));
 		
-		return li;
+		return li;}
+	
+	public ProductList productdetail(Integer id) throws SQLException {
+			ProductList li=new ProductList();
+			
+			li.setCode(0);
+			li.setTotalRow(new ctotalRow(0, new cera(10, 1, 1)));
+			li.setMsg("success");
+			li.setData(jdbc.query("select * from products where category=?", new Object[] {id},new BeanPropertyRowMapper<Product>(Product.class)));
+			
+			return li;
 		
 	}
 	public ContentList contentlist(int page,int limit) throws SQLException {
@@ -164,5 +182,15 @@ public class UserDaoImpl {
 		return jdbc.update("update options set content=? where id=?", new Object[] {content,id});
 		
 	}
+    
+    public String about() {
+    	return jdbc.queryForObject("select content from options where name='about'", String.class);
+    }
+    public String about_content() {
+    	return jdbc.queryForObject("select content from options where name='about_content'",String.class);
+    }
+    public String get_options(String name) {
+    	return jdbc.queryForObject("select content from options where name=?", new Object[] {name}, String.class);
+    }
 
 }

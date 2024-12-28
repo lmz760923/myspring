@@ -3,9 +3,9 @@ package stu01.manage.controller;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,15 +29,19 @@ import stu01.model.CategoryList;
 import stu01.model.ContentList;
 import stu01.model.ProductList;
 import stu01.model.Category;
+
 @Controller
 @RequestMapping("/manage")
 public class manageController {
+	private String realPath=System.getProperty("user.dir");
 	@Autowired
 	private UserDaoImpl udo;
 	@GetMapping("/index")
 	public ModelAndView manage(HttpServletRequest request) {
 		ModelAndView mv=new ModelAndView();
-		mv.setViewName("layui/manage/index");
+		mv.setViewName("layui/manage/login");
+		Optional<Boolean> log=Optional.ofNullable((Boolean)request.getSession().getAttribute("login"));
+		log.ifPresent(val->{if (val) mv.setViewName("layui/manage/index"); else {mv.setViewName("layui/manage/login");}});
 		
 		return mv;
 	}
@@ -120,8 +123,7 @@ public class manageController {
 	@ResponseBody
 	public ResponseEntity<ReturnCode> addcarousel(@RequestParam MultipartFile file) throws IllegalStateException, IOException{
 		
-		String realPath=System.getProperty("user.dir");
-		String path=realPath+File.separator+"/images/";
+		String path=realPath+File.separator+"images/";
 		File realFile = new File(path);
         if (!realFile.exists()) {
             System.out.println(realFile.mkdir());
@@ -130,7 +132,7 @@ public class manageController {
         String fullPath=path+file.getOriginalFilename();
 		
         file.transferTo(new File(fullPath));
-        udo.addcarousel(file.getOriginalFilename(), fullPath);
+        udo.addcarousel(file.getOriginalFilename(), fullPath.replace(realPath, ""));
 		return ResponseEntity.status(HttpStatus.OK).body(new ReturnCode(0,fullPath));
 		
 	}
@@ -139,7 +141,7 @@ public class manageController {
 	@ResponseBody
 	public ResponseEntity<ReturnCode> delcarousel(@RequestParam Integer carouselid){
 		String path=udo.delcarousel(carouselid);
-		File del=new File(path);
+		File del=new File(realPath+path);
 		del.delete();
 		return ResponseEntity.status(HttpStatus.OK).body(new ReturnCode(0,"deleted"));
 	}
@@ -163,8 +165,7 @@ public class manageController {
 	@ResponseBody
 	public ResponseEntity<ReturnCode> addcategory(@RequestParam MultipartFile file,@RequestParam String category,@RequestParam String description) throws IllegalStateException, IOException{
 		
-		String realPath=System.getProperty("user.dir");
-		String path=realPath+File.separator+"/images/";
+		String path=realPath+File.separator+"images/";
 		File realFile = new File(path);
         if (!realFile.exists()) {
             System.out.println(realFile.mkdir());
@@ -173,7 +174,7 @@ public class manageController {
         String fullPath=path+file.getOriginalFilename();
 		
         file.transferTo(new File(fullPath));
-        udo.addcategory(category,description,file.getOriginalFilename(), fullPath);
+        udo.addcategory(category,description,file.getOriginalFilename(), fullPath.replace(realPath, ""));
 		return ResponseEntity.status(HttpStatus.OK).body(new ReturnCode(0,fullPath));
 		
 	}
@@ -182,7 +183,7 @@ public class manageController {
 	@ResponseBody
 	public ResponseEntity<ReturnCode> delcategory(@RequestParam Integer categoryid){
 		String path=udo.delcategory(categoryid);
-		File del=new File(path);
+		File del=new File(realPath+path);
 		del.delete();
 		return ResponseEntity.status(HttpStatus.OK).body(new ReturnCode(0,"deleted"));
 	}
@@ -218,8 +219,8 @@ public class manageController {
 	@ResponseBody
 	public ResponseEntity<ReturnCode> addproduct(@RequestParam MultipartFile file,@RequestParam Integer category,@RequestParam String description,@RequestParam String product) throws IllegalStateException, IOException{
 		
-		String realPath=System.getProperty("user.dir");
-		String path=realPath+File.separator+"/images/";
+
+		String path=realPath+File.separator+"images/";
 		File realFile = new File(path);
         if (!realFile.exists()) {
             System.out.println(realFile.mkdir());
@@ -228,7 +229,7 @@ public class manageController {
         String fullPath=path+file.getOriginalFilename();
 		
         file.transferTo(new File(fullPath));
-        udo.addproduct(category,description,file.getOriginalFilename(), fullPath,product);
+        udo.addproduct(category,description,file.getOriginalFilename(), fullPath.replace(realPath, ""),product);
 		return ResponseEntity.status(HttpStatus.OK).body(new ReturnCode(0,fullPath));
 		
 	}
@@ -237,7 +238,7 @@ public class manageController {
 	@ResponseBody
 	public ResponseEntity<ReturnCode> delproduct(@RequestParam Integer productid){
 		String path=udo.delproduct(productid);
-		File del=new File(path);
+		File del=new File(realPath+path);
 		del.delete();
 		return ResponseEntity.status(HttpStatus.OK).body(new ReturnCode(0,"deleted"));
 	}
@@ -272,8 +273,7 @@ public class manageController {
 	@ResponseBody
 	public ResponseEntity<ReturnCode> uploadvideo(@RequestParam MultipartFile file) throws IllegalStateException, IOException{
 		
-		String realPath=System.getProperty("user.dir");
-		String path=realPath+File.separator+"/images/";
+		String path=realPath+File.separator+"images/";
 		File realFile = new File(path);
         if (!realFile.exists()) {
             System.out.println(realFile.mkdir());

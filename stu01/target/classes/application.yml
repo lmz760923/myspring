@@ -9,7 +9,7 @@ spring:
        mode: LEGACYHTML5
 
     datasource:
-      url: jdbc:sqlite:C:\Users\install\git\repository\stu01\target\database.sqlite?date_string_format=yyyy-MM-dd hh:mm:ss
+      url: jdbc:sqlite:database.sqlite?date_string_format=yyyy-MM-dd hh:mm:ss
       driver-class-name: org.sqlite.JDBC
       username: root
       password: root123456

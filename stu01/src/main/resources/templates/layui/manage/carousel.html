@@ -128,13 +128,7 @@ layui.use(function(){
 									data:formData,
 									processData:false,
 									contentType:false,
-									success:table.reload('test', {
-											where: {
-											abc: Math.random()
-                  
-												}
-                
-												},true),
+									//success:window.location.reload(),
 											
 
 								
@@ -235,8 +229,9 @@ layui.use(function(){
 	data:{_token: '{{csrf_token()}}'},
     accept: 'file', // 普通文件
     done: function(res){
-	  
       layer.msg(res.msg, {icon: 1});
+      window.location.reload();
+      
       
     }
   });

@@ -64,9 +64,9 @@
 					<div class="layui-input-wrap">
 				<select id="category" name="category" lay-search="true">
 					<option value="">请选择产品类别</option>
-					<block th:each="item:${categories}">
-					<option th:value="${item.id}" th:text="${item.category}"></option>
-					</block>
+				
+					<option th:each="item:${categories}" th:value="${item.id}" th:text="${item.category}"></option>
+
 				</select>
 				
 			

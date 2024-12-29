@@ -2,12 +2,12 @@ package stu01.model;
 
 import java.util.List;
 
-public class userlist {
+public class EntityList<T> {
 	private int code;
 	private ctotalRow  totalRow;
 	private String msg;
 	private int count;
-	private List<User> data;
+	private List<T> data;
 	public int getCode() {
 		return code;
 	}
@@ -32,13 +32,11 @@ public class userlist {
 	public void setCount(int count) {
 		this.count = count;
 	}
-	public List<User> getData() {
+	public List<T> getData() {
 		return data;
 	}
-	public void setData(List<User> data) {
+	public void setData(List<T> data) {
 		this.data = data;
 	}
 
 }
-
-

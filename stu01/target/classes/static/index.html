@@ -1,166 +1,108 @@
-<!doctype html>
-<html>
-  <head>
-    <meta http-equiv="Content-Type" charset="UTF-8" />
-    <meta http-equiv="cache-control" content="no-cache" />
-    <meta http-equiv="Pragma" content="no-cache" />
-    <meta http-equiv="expires" content="0" />
-    <title>Sending forms with FormData &ndash; MDN</title>
-    <script>
-      "use strict";
+<!DOCTYPE html>
+<html lang="en">
 
-      function ajaxSuccess() {
-        console.log(this.responseText);
-      }
-
-      function AJAXSubmit(oFormElement) {
-        if (!oFormElement.action) {
-          return;
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta http-equiv="refresh" content="2;url=/index">
+    <title>Document</title>
+    <style>
+        .wrap {
+            
+            width: 75px;
+            height: 75px;
+            position: absolute;
+            left:50%;
+            top:50%;
+            transform: translate(-50%, -50%);
         }
-        var oReq = new XMLHttpRequest();
-        oReq.onload = ajaxSuccess();
-        if (oFormElement.method.toLowerCase() === "post") {
-          oReq.open("post", oFormElement.action);
-          oReq.send(new FormData(oFormElement));
-        } else {
-          var oField,
-            sFieldType,
-            nFile,
-            sSearch = "";
-          for (var nItem = 0; nItem < oFormElement.elements.length; nItem++) {
-            oField = oFormElement.elements[nItem];
-            if (!oField.hasAttribute("name")) {
-              continue;
-            }
-            sFieldType =
-              oField.nodeName.toUpperCase() === "INPUT"
-                ? oField.getAttribute("type").toUpperCase()
-                : "TEXT";
-            if (sFieldType === "FILE") {
-              for (
-                nFile = 0;
-                nFile < oField.files.length;
-                sSearch +=
-                  "&" +
-                  escape(oField.name) +
-                  "=" +
-                  escape(oField.files[nFile++].name)
-              );
-            } else if (
-              (sFieldType !== "RADIO" && sFieldType !== "CHECKBOX") ||
-              oField.checked
-            ) {
-              sSearch += "&" + escape(oField.name) + "=" + escape(oField.value);
-            }
-          }
-          oReq.open(
-            "get",
-            oFormElement.action.replace(
-              /(?:\?.*)?$/,
-              sSearch.replace(/^&/, "?"),
-            ),
-            true,
-          );
-          oReq.send(null);
+
+        .round {
+            position: absolute;
+            width: 13px;
+            height: 13px;
+            border-radius: 50%;
+            background-color: rgb(241, 141, 157);
+            /* 加上动画效果 */
+            animation: circleRound 2.8s ease infinite;
+            /* 设置旋转中心，搭配.wrap的border看 */
+            transform-origin: 50% 75px;
         }
-      }
-    </script>
-  </head>
-  <body>
-    <h1>Sending forms with FormData</h1>
 
-    <h2>Using the GET method</h2>
+        /* 注意z-index层级关系，依次递减 */
+        .round:nth-child(1) {
+            z-index: 7;
+        }
 
-    <form
-      action="register.php"
-      method="get"
-      onsubmit="AJAXSubmit(this); return false;">
-      <fieldset>
-        <legend>Registration example</legend>
-        <p>
-          First name: <input type="text" name="firstname" /><br />
-          Last name: <input type="text" name="lastname" />
-        </p>
-        <p>
-          <input type="submit" value="Submit" />
-        </p>
-      </fieldset>
-    </form>
+        /* 注意动画延后animation-delay播放，依次递增 */
+        /* 至于小圆球则越来越小 */
+        .round:nth-child(2) {
+            height: 12px;
+            width: 12px;
+            background-color: rgb(199, 136, 185);
+            animation-delay: .2s;
+            z-index: 6;
+        }
 
-    <h2>Using the POST method</h2>
-    <h3>Enctype: application/x-www-form-urlencoded (default)</h3>
+        .round:nth-child(3) {
+            height: 11px;
+            width: 11px;
+            background-color: rgb(153, 69, 223);
+            animation-delay: .4s;
+            z-index: 5;
+        }
 
-    <form
-      action="register.php"
-      method="post"
-      onsubmit="AJAXSubmit(this); return false;">
-      <fieldset>
-        <legend>Registration example</legend>
-        <p>
-          First name: <input type="text" name="firstname" /><br />
-          Last name: <input type="text" name="lastname" />
-        </p>
-        <p>
-          <input type="submit" value="Submit" />
-        </p>
-      </fieldset>
-    </form>
+        .round:nth-child(4) {
+            height: 10px;
+            width: 10px;
+            background-color: rgb(69, 141, 223);
+            animation-delay: .6s;
+            z-index: 4;
+        }
 
-    <h3>Enctype: text/plain</h3>
+        .round:nth-child(5) {
+            height: 9px;
+            width: 9px;
+            background-color: rgb(69, 223, 203);
+            animation-delay: .8s;
+            z-index: 3;
+        }
 
-    <p>The text/plain encoding is not supported by the FormData API.</p>
+        .round:nth-child(6) {
+            height: 8px;
+            width: 8px;
+            background-color: rgb(100, 223, 69);
+            animation-delay: 1s;
+            z-index: 2;
+        }
 
-    <h3>Enctype: multipart/form-data</h3>
+        .round:nth-child(7) {
+            height: 7px;
+            width: 7px;
+            background-color: rgb(223, 200, 69);
+            animation-delay: 1.2s;
+            z-index: 1;
+        }
 
-    <form
-      action="register.php"
-      method="post"
-      enctype="multipart/form-data"
-      onsubmit="AJAXSubmit(this); return false;">
-      <fieldset>
-        <legend>Upload example</legend>
-        <p>
-          First name: <input type="text" name="firstname" /><br />
-          Last name: <input type="text" name="lastname" /><br />
-          Sex:
-          <input id="sex_male" type="radio" name="sex" value="male" />
-          <label for="sex_male">Male</label>
-          <input id="sex_female" type="radio" name="sex" value="female" />
-          <label for="sex_female">Female</label><br />
-          Password: <input type="password" name="secret" /><br />
-          What do you prefer:
-          <select name="image_type">
-            <option>Books</option>
-            <option>Cinema</option>
-            <option>TV</option>
-          </select>
-        </p>
-        <p>
-          Post your photos:
-          <input type="file" multiple name="photos" />
-        </p>
-        <p>
-          <input
-            id="vehicle_bike"
-            type="checkbox"
-            name="vehicle[]"
-            value="Bike" />
-          <label for="vehicle_bike">I have a bike</label><br />
-          <input
-            id="vehicle_car"
-            type="checkbox"
-            name="vehicle[]"
-            value="Car" />
-          <label for="vehicle_car">I have a car</label>
-        </p>
-        <p>
-          Describe yourself:<br />
-          <textarea name="description" cols="50" rows="8"></textarea>
-        </p>
-        <p>
-          <input type="submit" value="Submit" />
-        </p>
-      </fieldset>
-    </form>
-  </body>
+        @keyframes circleRound {
+            to {
+                transform: rotate(1turn);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrap">
+        <div class="round"></div>
+        <div class="round"></div>
+        <div class="round"></div>
+        <div class="round"></div>
+        <div class="round"></div>
+        <div class="round"></div>
+        <div class="round"></div>
+    </div>
+</body>
+
 </html>

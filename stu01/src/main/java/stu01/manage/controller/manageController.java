@@ -23,12 +23,11 @@ import org.springframework.web.servlet.ModelAndView;
 import stu01.service.*;
 import stu01.model.ReturnCode;
 import stu01.model.User;
-import stu01.model.userlist;
-import stu01.model.carousellist;
-import stu01.model.CategoryList;
-import stu01.model.ContentList;
-import stu01.model.ProductList;
+import stu01.model.Content;
+import stu01.model.EntityList;
+import stu01.model.Product;
 import stu01.model.Category;
+import stu01.model.carousel;
 
 @Controller
 @RequestMapping("/manage")
@@ -90,7 +89,7 @@ public class manageController {
 	
 	@ResponseBody
 	@GetMapping("/userlist")
-	public userlist userlist() throws SQLException
+	public EntityList<User> userlist() throws SQLException
 	{
 	  return udo.userlist();	
 	}
@@ -113,7 +112,7 @@ public class manageController {
 	}
 	@GetMapping("/carousellist")
 	@ResponseBody
-	public carousellist carousellist(@RequestParam Integer page,@RequestParam Integer limit) throws SQLException
+	public EntityList<carousel> carousellist(@RequestParam Integer page,@RequestParam Integer limit) throws SQLException
 	{
 		return udo.carousellist(page, limit);
 		
@@ -148,7 +147,7 @@ public class manageController {
 	
 	@GetMapping("/categorylist")
 	@ResponseBody
-	public CategoryList categorylist(@RequestParam Integer page,@RequestParam Integer limit) throws SQLException
+	public EntityList<Category> categorylist(@RequestParam Integer page,@RequestParam Integer limit) throws SQLException
 	{
 		return udo.categorylist(page, limit);
 		
@@ -202,14 +201,14 @@ public class manageController {
 	
 	@GetMapping("/productlist")
 	@ResponseBody
-	public ProductList productlist(@RequestParam Integer page,@RequestParam Integer limit) throws SQLException
+	public EntityList<Product> productlist(@RequestParam Integer page,@RequestParam Integer limit) throws SQLException
 	{
 		return udo.productlist(page, limit);
 		
 	}
 	@GetMapping("/contentlist")
 	@ResponseBody
-	public ContentList contentlist(@RequestParam Integer page,@RequestParam Integer limit) throws SQLException
+	public EntityList<Content> contentlist(@RequestParam Integer page,@RequestParam Integer limit) throws SQLException
 	{
 		return udo.contentlist(page, limit);
 		

@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import stu01.model.ProductList;
+import stu01.model.EntityList;
+import stu01.model.Product;
 import stu01.service.UserDaoImpl;
 
 @Controller
@@ -43,7 +44,7 @@ public class FrontController {
    
    @GetMapping("productdetail/{cateid}")
    @ResponseBody
-   ResponseEntity<ProductList> productdetail(@PathVariable Integer cateid) throws SQLException{
+   ResponseEntity<EntityList<Product>> productdetail(@PathVariable Integer cateid) throws SQLException{
 	   return ResponseEntity.status(HttpStatus.OK).body(udo.productdetail(cateid));
    }
 

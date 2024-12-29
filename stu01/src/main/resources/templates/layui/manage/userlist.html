@@ -185,17 +185,8 @@ layui.use(['table', 'dropdown'], function(){
 						type:"POST",
 						url:"adduser",
 						data:{_token:"{{csrf_token()}}",username:testret,email:email,reg_password:reg_password,con_password:con_password},
-						success:layui.use(['table'],function(){
-							let table=layui.table;
-							
-						    table.reload('test', {
-							where: {
-							abc: 'abc'
-                  
-									}
-                
-								})
-						}),
+						success:function(xhr){
+						    window.location.reload()},
 								
 						error: function(xhr,status,error){alert(xhr.responseText);}
 						

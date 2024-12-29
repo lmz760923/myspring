@@ -8,17 +8,13 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.stereotype.Repository;
 import stu01.model.Content;
-import stu01.model.CategoryList;
-import stu01.model.ContentList;
-import stu01.model.ProductList;
+import stu01.model.EntityList;
 import stu01.model.Product;
 import stu01.model.Category;
 import stu01.model.User;
 import stu01.model.carousel;
 import stu01.model.cera;
 import stu01.model.ctotalRow;
-import stu01.model.userlist;
-import stu01.model.carousellist;
 @Repository("userDao")
 public class UserDaoImpl {
 	@Resource(name="datasource")
@@ -29,12 +25,6 @@ public class UserDaoImpl {
 	public int insert(User user) throws SQLException {
 		return jdbc.update("insert into users(name,password,email,created_at,updated_at) values(?,?,?,datetime('now','localtime'),datetime('now','localtime'))",user.getName(),user.getPassword(),user.getEmail());
 		
-	}
-	public List<User>select() throws SQLException {
-		
-      return jdbc.query("select * from users", new BeanPropertyRowMapper<User>(User.class));
-       
-
 	}
 	
 	public User login(User u) {
@@ -54,20 +44,20 @@ public class UserDaoImpl {
 		
 	}
 	
-	public userlist userlist() throws SQLException {
-		userlist li=new userlist();
+	public EntityList<User> userlist() throws SQLException {
+		EntityList<User> li=new EntityList<User>();
 		
 		li.setCode(0);
 		li.setTotalRow(new ctotalRow(0, new cera(10, 1, 1)));
 		li.setMsg("success");
-		li.setData(this.select());
+		li.setData(jdbc.query("select * from users", new BeanPropertyRowMapper<User>(User.class)));
 		
 		return li;
 		
 	}
 	
-	public carousellist carousellist(int page,int limit) throws SQLException {
-		carousellist li=new carousellist();
+	public EntityList<carousel> carousellist(int page,int limit) throws SQLException {
+		EntityList<carousel> li=new EntityList<carousel>();
 		
 		li.setCode(0);
 		li.setTotalRow(new ctotalRow(0, new cera(10, 1, 1)));
@@ -82,8 +72,8 @@ public class UserDaoImpl {
 		return jdbc.query("select * from carousel", new BeanPropertyRowMapper<carousel>(carousel.class));
 	}
 	
-	public CategoryList categorylist(int page,int limit) throws SQLException {
-		CategoryList li=new CategoryList();
+	public EntityList<Category> categorylist(int page,int limit) throws SQLException {
+		EntityList<Category> li=new EntityList<Category>();
 		
 		li.setCode(0);
 		li.setTotalRow(new ctotalRow(0, new cera(10, 1, 1)));
@@ -98,8 +88,8 @@ public class UserDaoImpl {
 		return jdbc.query("select * from categories", new BeanPropertyRowMapper<Category>(Category.class));
 	}
 	
-	public ProductList productlist(int page,int limit) throws SQLException {
-		ProductList li=new ProductList();
+	public EntityList<Product> productlist(int page,int limit) throws SQLException {
+		EntityList<Product> li=new EntityList<Product>();
 		
 		li.setCode(0);
 		li.setTotalRow(new ctotalRow(0, new cera(10, 1, 1)));
@@ -108,8 +98,8 @@ public class UserDaoImpl {
 		
 		return li;}
 	
-	public ProductList productdetail(Integer id) throws SQLException {
-			ProductList li=new ProductList();
+	public EntityList<Product> productdetail(Integer id) throws SQLException {
+		   EntityList<Product> li=new EntityList<Product>();
 			
 			li.setCode(0);
 			li.setTotalRow(new ctotalRow(0, new cera(10, 1, 1)));
@@ -119,8 +109,8 @@ public class UserDaoImpl {
 			return li;
 		
 	}
-	public ContentList contentlist(int page,int limit) throws SQLException {
-		ContentList li=new ContentList();
+	public EntityList<Content> contentlist(int page,int limit) throws SQLException {
+		EntityList<Content> li=new EntityList<Content>();
 		
 		li.setCode(0);
 		li.setTotalRow(new ctotalRow(0, new cera(10, 1, 1)));
